@@ -8,7 +8,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const { deployer } = await getNamedAccounts();
 
-  await deploy("PriceConsumerV3", {
+  await deploy("OracleSolver", {
     from: deployer, // owner
     args: [],
     log: true,

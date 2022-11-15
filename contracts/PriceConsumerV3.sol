@@ -1,35 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity >=0.7.0 <0.9.0;
-
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-
-contract PriceConsumerV3 {
-  AggregatorV3Interface internal priceFeed;
-
-  /**
-   * Network: Goerli
-   * Aggregator: ETH/USD
-   */
-  constructor(address contractA) {
-    priceFeed = AggregatorV3Interface(contractA);
-  }
-
-  /**
-   * Returns the latest price
-   */
-  function getLatestPrice() public view returns (int256) {
-    (
-      ,
-      /*uint80 roundID*/
-      int256 price, /*uint startedAt*/ /*uint timeStamp*/ /*uint80 answeredInRound*/
-      ,
-      ,
-
-    ) = priceFeed.latestRoundData();
-    return price;
-  }
-}
+pragma solidity ^0.8.4;
 
 /**
  * @title OracleSolver

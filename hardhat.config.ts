@@ -5,6 +5,7 @@ import "dotenv/config";
 
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL || "";
 const PRIVATE_KEY_OWNER = process.env.PRIVATE_KEY_OWNER || "";
+const ETHERSCAN_KEY = process.env.ETHERSCAN_KEY || "";
 
 const config: HardhatUserConfig = {
   solidity: "0.8.4",
@@ -17,7 +18,13 @@ const config: HardhatUserConfig = {
       url: GOERLI_RPC_URL,
       accounts: [PRIVATE_KEY_OWNER],
       chainId: 5,
+      gasPrice: 97000000000,
     },
+  },
+  etherscan: {
+    // Your API key for Etherscan
+    // Obtain one at https://etherscan.io/
+    apiKey: ETHERSCAN_KEY, //ETHERSCAN_KEY,
   },
 };
 
