@@ -5,3 +5,6 @@
 
 2. verify contract in etherscan
    `npx hardhat verify --network goerli <contractaddress>`
+
+3. run tests
+   `npx hardhat test`
