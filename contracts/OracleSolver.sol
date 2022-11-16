@@ -13,36 +13,54 @@ contract OracleSolver {
   mapping(bytes32 => address) public tokensSolver;
   mapping(bytes32 => PriceConsumerV3) public tokensPricer; //this should be private
 
+  error IdenticalAddress(address);
+  error PairExist(address, address, address);
+  error ZeroAddress(address);
+  error PairNotExist(address, address);
+
   function addContract(
     address tokenA,
     address tokenB,
     address solver
   ) public {
-    require(tokenA != tokenB, "OracleSolver: IDENTICAL_ADDRESSES");
-    require(getContractAddress(tokenA, tokenB) != address(0), "OracleSolver: PAIR_EXISTS");
-    (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
-    require(token0 != address(0), "OracleSolver: ZERO_ADDRESS");
-    bytes32 tokens = keccak256(abi.encodePacked(token0, token1));
-    tokensPricer[tokens] = new PriceConsumerV3(solver);
+    address pairContract = getContractSolver(tokenA, tokenB);
+    if (pairContract != address(0)) revert PairExist(tokenA, tokenB, pairContract);
+
+    bytes32 tokens = generateTokensBytes(tokenA, tokenB);
+
+    tokensPricer[tokens] = new PriceConsumerV3(solver); // create a new solver contract
     tokensSolver[tokens] = solver;
   }
 
-  function getContractAddress(address tokenA, address tokenB) public view returns (address) {
-    require(tokenA != tokenB, "OracleSolver: IDENTICAL_ADDRESSES");
-    (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
-    bytes32 tokens = keccak256(abi.encodePacked(token0, token1));
+  function orderAddress(address tokenA, address tokenB) private pure returns (address, address) {
+    return tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
+  }
+
+  function generateTokensBytes(address tokenA, address tokenB) private pure returns (bytes32) {
+    (address token0, address token1) = orderAddress(tokenA, tokenB);
+    if (token0 == address(0)) revert ZeroAddress(token0);
+
+    return keccak256(abi.encodePacked(token0, token1));
+  }
+
+  function getContractSolver(address tokenA, address tokenB) public view returns (address) {
+    if (tokenA == tokenB) revert IdenticalAddress(tokenA);
+
+    bytes32 tokens = generateTokensBytes(tokenA, tokenB);
     return tokensSolver[tokens];
   }
 
-  function getContract(address tokenA, address tokenB) private view returns (PriceConsumerV3) {
-    require(tokenA != tokenB, "OracleSolver: IDENTICAL_ADDRESSES");
-    (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
-    bytes32 tokens = keccak256(abi.encodePacked(token0, token1));
+  function getContractConsumer(address tokenA, address tokenB) private view returns (PriceConsumerV3) {
+    if (tokenA == tokenB) revert IdenticalAddress(tokenA);
+
+    bytes32 tokens = generateTokensBytes(tokenA, tokenB);
     return tokensPricer[tokens];
   }
 
-  function getPrice(address tokenA, address tokenB) public view returns (int) {
-    require(getContractAddress(tokenA, tokenB) != address(0), "OracleSolver: PAIR_EXISTS");
-    return getContract(tokenA, tokenB).getLatestPrice();
+  function getPrice(address tokenA, address tokenB) public view returns (int256) {
+    address pairContract = getContractSolver(tokenA, tokenB);
+    if (pairContract == address(0)) revert PairNotExist(tokenA, tokenB);
+
+    return getContractConsumer(tokenA, tokenB).getLatestPrice();
   }
 }
