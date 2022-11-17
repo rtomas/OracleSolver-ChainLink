@@ -11,7 +11,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
  */
 contract OracleSolver is Ownable {
-  mapping(bytes32 => address) private tokensSolver;
   mapping(bytes32 => PriceConsumerV3) private tokensPricer;
 
   error IdenticalAddress(address);
@@ -19,25 +18,21 @@ contract OracleSolver is Ownable {
   error ZeroAddress(address);
   error PairNotExist(address, address);
 
+  event PairAdded(address token0, address token1, address pricer);
+
   function addContract(
     address tokenA,
     address tokenB,
     address solver
   ) public onlyOwner {
-    address pairContract = getContractSolver(tokenA, tokenB);
-    if (pairContract != address(0)) revert PairExist(tokenA, tokenB, pairContract);
+    PriceConsumerV3 pc = getContractConsumer(tokenA, tokenB);
+    if (address(pc) != address(0)) revert PairExist(tokenA, tokenB, solver);
 
     bytes32 tokens = generateTokensBytes(tokenA, tokenB);
 
-    tokensPricer[tokens] = new PriceConsumerV3(solver); // create a new solver contract
-    tokensSolver[tokens] = solver;
-  }
+    tokensPricer[tokens] = new PriceConsumerV3(solver);
 
-  function getContractSolver(address tokenA, address tokenB) public view returns (address) {
-    if (tokenA == tokenB) revert IdenticalAddress(tokenA);
-
-    bytes32 tokens = generateTokensBytes(tokenA, tokenB);
-    return tokensSolver[tokens];
+    emit PairAdded(tokenA, tokenB, address(tokensPricer[tokens]));
   }
 
   function getContractConsumer(address tokenA, address tokenB) private view returns (PriceConsumerV3) {
@@ -48,10 +43,10 @@ contract OracleSolver is Ownable {
   }
 
   function getPrice(address tokenA, address tokenB) public view returns (int256) {
-    address pairContract = getContractSolver(tokenA, tokenB);
-    if (pairContract == address(0)) revert PairNotExist(tokenA, tokenB);
+    PriceConsumerV3 pc = getContractConsumer(tokenA, tokenB);
+    if (address(pc) == address(0)) revert PairNotExist(tokenA, tokenB);
 
-    return getContractConsumer(tokenA, tokenB).getLatestPrice();
+    return pc.getLatestPrice();
   }
 
   function orderAddress(address tokenA, address tokenB) private pure returns (address, address) {

@@ -4,6 +4,9 @@ Given two tokens it solves an address of the chainlink oracle.
 
 # Test
 
+0. Install dependencies
+   `yarn`
+
 1. Deploy contracts
    `npx hardhat --network mumbai deploy`
 
@@ -25,7 +28,7 @@ https://docs.chain.link/data-feeds/price-feeds/addresses
 
 # Contract in Mumbai
 
-https://mumbai.polygonscan.com/address/0x2D506af8f3499b1e49aced92B72bE8C22616ed95
+https://mumbai.polygonscan.com/address/0x46b1e5E36dBb37Ae99Ba6008AbAa82cE758f26c5
 
 by Gabriel González & Tomás Rawski
 
