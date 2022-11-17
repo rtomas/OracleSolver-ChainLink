@@ -27,6 +27,6 @@ https://docs.chain.link/data-feeds/price-feeds/addresses
 
 https://mumbai.polygonscan.com/address/0x2D506af8f3499b1e49aced92B72bE8C22616ed95
 
-by Gabriel Camba & Tomás Rawski
+by Gabriel González & Tomás Rawski
 
 for Chainlink Fall 2022 Hackathon
