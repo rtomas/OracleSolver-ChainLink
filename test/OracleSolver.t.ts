@@ -21,7 +21,4 @@ makeStartCleanEach("#Start OracleSolver Contract", function () {
       await expect(oracleSolver.connect(userTwo).addContract(tokenBTC, tokenETH, Solver)).to.be.revertedWith("Ownable: caller is not the owner");
     });
   });
-
-  // 1. add a contract solver with owner
-  // 2.try add a contract solver with other account
 });

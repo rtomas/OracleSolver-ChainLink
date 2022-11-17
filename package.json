@@ -1,5 +1,9 @@
 {
-  "name": "hardhat-project",
+  "name": "oracle-solver-price-consumer",
+  "scripts": {
+    "getPrice": "npx ts-node --files scripts/getPrice.ts",
+    "addContract": "npx ts-node --files scripts/addPairValues.ts"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.4",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.6",
