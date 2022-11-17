@@ -13,8 +13,12 @@ makeStartCleanEach("#Start OracleSolver Contract", function () {
   });
 
   describe("Add Pair Values", async () => {
-    it("BSC/ETH", async () => {
-      expect(await oracleSolver.addContract(tokenBTC, tokenETH, Solver)).to.emit(oracleSolver, "PairAdded");
+    it("BTC/ETH with owner", async () => {
+      expect(await oracleSolver.connect(deployer).addContract(tokenBTC, tokenETH, Solver)).to.emit(oracleSolver, "PairAdded");
+    });
+
+    it("BTC/ETH with any other user", async () => {
+      await expect(oracleSolver.connect(userTwo).addContract(tokenBTC, tokenETH, Solver)).to.be.revertedWith("Ownable: caller is not the owner");
     });
   });
 
