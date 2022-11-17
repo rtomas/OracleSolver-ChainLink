@@ -45,7 +45,6 @@ const config: HardhatUserConfig = {
     currency: "MATIC",
     token: "MATIC",
     gasPriceApi: "https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice",
-    coinmarketcap: MARKETCAP_KEY,
   },
 };
 
