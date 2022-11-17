@@ -1,5 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
+require("dotenv").config();
+
 //import { parseEther } from 'ethers/lib/utils'
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
@@ -8,12 +10,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const { deployer } = await getNamedAccounts();
 
-  await deploy("OracleSolver", {
+  const deployResult = await deploy("OracleSolver", {
     from: deployer, // owner
     args: [],
     log: true,
     autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
   });
+
   console.log(deployer);
 };
 export default func;

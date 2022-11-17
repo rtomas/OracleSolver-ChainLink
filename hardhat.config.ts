@@ -18,13 +18,24 @@ const config: HardhatUserConfig = {
       url: GOERLI_RPC_URL,
       accounts: [PRIVATE_KEY_OWNER],
       chainId: 5,
-      gasPrice: 97000000000,
+      gasPrice: 5000000000,
+    },
+    localhost: {
+      url: "HTTP://127.0.0.1:7545",
+      chainId: 1337,
     },
   },
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
     apiKey: ETHERSCAN_KEY, //ETHERSCAN_KEY,
+  },
+  gasReporter: {
+    enabled: true,
+    outputFile: "gas-report.txt",
+    noColors: true,
+    currency: "USD",
+    token: "WEI",
   },
 };
 
