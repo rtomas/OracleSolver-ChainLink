@@ -11,8 +11,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
  */
 contract OracleSolver is Ownable {
-  mapping(bytes32 => address) public tokensSolver;
-  mapping(bytes32 => PriceConsumerV3) public tokensPricer; //this should be private
+  mapping(bytes32 => address) private tokensSolver;
+  mapping(bytes32 => PriceConsumerV3) private tokensPricer;
 
   error IdenticalAddress(address);
   error PairExist(address, address, address);
